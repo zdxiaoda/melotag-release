@@ -30,12 +30,12 @@ not used.  Every candidate carries its family, style, license, official source
 URL and SHA-256; the resolved path, face index and variable-font axes are
 printed on every run.  Glyph coverage for all exact copy is verified before
 rendering, so a missing character fails the build instead of producing tofu.
-See ``packaging/store/images/FONT-LICENSES.md`` for the audit trail.  No font
+See ``store/images/FONT-LICENSES.md`` for the audit trail.  No font
 file is copied into this repository.
 
 Run
 ---
-    python packaging/store/tools/Generate-StoreArt.py
+    python store/tools/Generate-StoreArt.py
 
 If Pillow is available in a local virtual environment, simply use that
 interpreter.  All images are rendered at 2x and downsampled with Lanczos, then
@@ -62,9 +62,9 @@ from PIL import Image, ImageChops, ImageCms, ImageDraw, ImageFilter, ImageFont
 
 SS = 2  # supersampling factor for every canvas
 
-ROOT = Path(__file__).resolve().parents[3]
-IMAGES = ROOT / "packaging" / "store" / "images"
-SOURCE_LOGO = ROOT / "docs" / "branding" / "melotag-logo.png"
+ROOT = Path(__file__).resolve().parents[2]
+IMAGES = ROOT / "store" / "images"
+SOURCE_LOGO = ROOT / "store" / "images" / "melotag-logo.png"
 
 PURPLE = (110, 91, 245)       # #6E5BF5
 CYAN = (24, 190, 214)         # #18BED6
@@ -1460,7 +1460,7 @@ def verify_png(path: Path, expected: tuple[int, int], allow_alpha: bool = False)
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate Melotag store artwork")
-    parser.add_argument("--out", type=Path, default=IMAGES, help="output root (default: packaging/store/images)")
+    parser.add_argument("--out", type=Path, default=IMAGES, help="output root (default: store/images)")
     parser.add_argument(
         "--only",
         choices=("all", "tile", "box", "posters", "hero"),

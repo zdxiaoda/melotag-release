@@ -29,7 +29,7 @@
 - [x] 系统要求可核对：`packaging/windows/msix/Package.appxmanifest` 的 `TargetDeviceFamily` 为 `Windows.Desktop`，`MinVersion` 为 `10.0.19041.0`，`ProcessorArchitecture` 由构建参数注入（x64 / arm64）。
 - [x] MSIX 清单和构建脚本存在：`packaging/windows/msix/Package.appxmanifest`、`build-msix.ps1`、`build-msix-bundle.ps1`。
 - [x] 截图和商店图片复现脚本存在：`tools/Generate-StoreArt.py`、`tools/Capture-StoreScreenshots.ps1`。
-- [x] 三语宣传片与缩略图：`trailer/{zh-CN,ja-JP,en-US}/Melotag-<ver>-trailer-<lang>.mp4` 与同目录 `thumbnail-1920x1080.png`。
+- [x] 三语宣传片与缩略图：由 `trailer/` 的 Remotion 项目渲染 `Melotag-<ver>-trailer-<lang>.mp4`；缩略图在 `trailer/{zh-CN,ja-JP,en-US}/thumbnail-1920x1080.png`。
 
 注意：仓库中没有已生成、已签名、可直接上传的 `.msixbundle` 成品；商店包属于构建产物，需要在 Windows 上生成后再上传。
 
@@ -63,12 +63,11 @@
 
 | 语言 | 建议 URL |
 | --- | --- |
-| zh-CN | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/zh-CN/privacy.md |
-| ja-JP | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/ja-JP/privacy.md |
-| en-US | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/en-US/privacy.md |
+| zh-CN | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/zh-CN/privacy.md |
+| ja-JP | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/ja-JP/privacy.md |
+| en-US | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/en-US/privacy.md |
 
-- [ ] 先将 `packaging/store/privacy/` 提交并推送到公开仓库的 `main` 分支。推送前这些链接不可访问，不能当作已公开隐私政策。
-- [ ] 当前工作区中 `packaging/store/` 尚未被 Git 跟踪（以 `git status` 为准）；不要把上面的 URL 当作已经上线，也不要在 Partner Center 中宣称隐私政策已发布。
+- [ ] 先将本仓库（melotag-release）的 `store/privacy/` 推送到公开仓库的 `main` 分支。推送前这些链接不可访问，不能当作已公开隐私政策。
 - [ ] 推送后用无痕窗口或未登录浏览器逐个打开三个 URL，确认无需登录即可访问、渲染正常、没有 404。如果仓库不是公开仓库，GitHub 链接不能作为公开隐私政策 URL。
 - [ ] 在 Partner Center 的 Privacy policy URL 字段填入对应语言的公开 URL；如果 Partner Center 只接受一个通用 URL，使用英文页面或与商店主要语言一致的页面，并确认另外两种语言仍可从应用/网站访问。
 - [ ] 确认隐私政策内容与提交包一致：本地设置/历史、在线查询发送的搜索文本、第三方服务、Last.fm API key、GitHub 更新检查、无账号/广告/遥测、数据删除方式。
@@ -135,6 +134,7 @@
 - [ ] 只复制字段正文，不把 Markdown 标题、列表编号或“首次提交可留空”等编辑说明粘贴到商店字段。
 - [ ] 如上传可选的 poster，先复核其营销文案与已实现功能一致；海报不是 listing 描述，也不能替代截图。
 - [ ] 如上传宣传片，确认画面与当前版本界面一致、不含年龄分级或平台品牌标识，且结尾没有宣称商店已上架；Trailer 需单独通过认证。
+- [ ] 如上传宣传片，在视频备注（或认证备注）中注明 BGM 出处：ChiliChill《给你的BGM Vol.1》（见 `audio/README.md`）。
 - [ ] 不上传 `tools/` 中的脚本。
 
 ## 8. 待发布者操作：最终认证与发布

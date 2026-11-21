@@ -1,10 +1,10 @@
 # 商店图片字体与许可证记录
 
-本文记录 `packaging/store/tools/Generate-StoreArt.py` 生成商店图时实际使用的字体，核验日期 2026-11-03。
+本文记录 `store/tools/Generate-StoreArt.py` 生成商店图时实际使用的字体，核验日期 2026-11-03。
 
 - 字体均为本机已安装字体，本次工作没有安装任何新字体。
 - 字体均为 SIL Open Font License 1.1（OFL-1.1），允许商业使用。
-- 仓库不复制、不捆绑、不再分发任何字体文件；`packaging/store/images/` 下只包含脚本渲染的 PNG。
+- 仓库不复制、不捆绑、不再分发任何字体文件；`store/images/` 下只包含脚本渲染的 PNG。
 - `images/screenshots/` 是应用真实截图，由另一脚本采集，不在本文范围内。
 
 ## 实际使用的字体
@@ -47,7 +47,7 @@ OFL-1.1 官方说明：https://openfontlicense.org/ 。许可证义务主要针�
 在仓库根目录执行：
 
 ```bash
-uv run --offline --with pillow==13.0.0 python packaging/store/tools/Generate-StoreArt.py
+uv run --offline --with pillow==13.0.0 python store/tools/Generate-StoreArt.py
 ```
 
-脚本只读取本机字体目录，不访问网络；默认重新生成 `packaging/store/images/` 下的商店图。更换字体时需同时满足本机已安装、OFL 或等效可商用许可、覆盖三语全部文案，并更新 `FONT_CANDIDATES` 与本文档。
+脚本只读取本机字体目录，不访问网络；默认重新生成 `store/images/` 下的商店图。更换字体时需同时满足本机已安装、OFL 或等效可商用许可、覆盖三语全部文案，并更新 `FONT_CANDIDATES` 与本文档。

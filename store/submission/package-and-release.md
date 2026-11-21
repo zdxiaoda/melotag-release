@@ -108,7 +108,7 @@ foreach ($arch in @('x64', 'arm64')) {
 | MSIX `StoreLogo.png` | `Assets\StoreLogo.png`，50×50 | `build-msix.ps1` 调用 `dotnet run --project tools/Melotag.Branding -- msix <stage>/Assets` | 包清单 `Properties/Logo`，包内商店图标 |
 | MSIX 方形图标 | `Square44x44Logo.png`、`Square71x71Logo.png`、`Square150x150Logo.png`、`Square310x310Logo.png` | 同上 | 开始菜单、磁贴和包内视觉元素 |
 | MSIX 宽图 | `Wide310x150Logo.png`，310×150 | 同上 | `uap:DefaultTile` |
-| Listing 商店图标 | `packaging/store/images/logo/app-tile-300x300.png`，300×300 | `uv run --offline --with pillow python packaging/store/tools/Generate-StoreArt.py --only tile` | Partner Center listing 的 Store logo |
+| Listing 商店图标 | `store/images/logo/app-tile-300x300.png`，300×300 | `uv run --offline --with pillow python store/tools/Generate-StoreArt.py --only tile` | Partner Center listing 的 Store logo |
 
 检查点：
 

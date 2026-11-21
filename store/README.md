@@ -32,19 +32,19 @@
 | `images/logo/box-art-1080x1080.png` | 1080×1080 box art | PC 可选展示物料 | 可选上传 |
 | `images/poster/<lang>/poster-720x1080.png` | 每语言 1 张 poster | PC 可选展示物料 | 可选上传 |
 | `images/hero/super-hero-1920x1080.png` | 1920×1080 hero art | PC 可选展示物料 | 可选上传 |
-| `trailer/<lang>/Melotag-<ver>-trailer-<lang>.mp4` | 三语宣传片（1920×1080，约 39 秒） | 对应语言 listing 的 Trailer 字段 | 上传 MP4 |
+| `trailer/<lang>/Melotag-<ver>-trailer-<lang>.mp4` | 三语宣传片（1920×1080，约 40 秒） | 对应语言 listing 的 Trailer 字段 | 上传 MP4 |
 | `trailer/<lang>/thumbnail-1920x1080.png` | 对应语言的宣传片缩略图 | Trailer 缩略图 | 上传 PNG |
 | `privacy/zh-CN/privacy.md`、`privacy/ja-JP/privacy.md`、`privacy/en-US/privacy.md` | 三语隐私政策源文件 | 发布为公开网页后填写 URL | 不上传文件，填写公开 URL |
 | `submission/upload-checklist.md` | 提交核对清单 | 发布者逐项勾选 | 不上传 |
 | `submission/age-rating-notes.md` | IARC 问卷事实依据 | 答题参考 | 不上传 |
 | `submission/certification-notes.md` | 英文认证备注草稿及中文说明 | 粘贴英文正文到认证备注 | 仅按需粘贴正文 |
 | `submission/package-and-release.md` | MSIX、标识与发布前风险 | 打包/发布检查 | 不上传 |
-| `tools/` | 图片生成、截图和宣传片脚本 | 复现物料 | 不上传，也不放入 MSIX |
+| `tools/` | 图片生成与截图脚本 | 复现物料 | 不上传，也不放入 MSIX |
 
 完整目录树：
 
 ```text
-packaging/store/
+store/
 ├─ README.md
 ├─ listing/
 │  ├─ zh-CN/listing.md
@@ -57,6 +57,7 @@ packaging/store/
 │  └─ package-and-release.md
 ├─ images/
 │  ├─ FONT-LICENSES.md
+│  ├─ melotag-logo.png
 │  ├─ screenshots/
 │  │  ├─ zh-CN/{01-main,02-lyrics,03-rename,04-settings}.png
 │  │  ├─ ja-JP/{01-main,02-lyrics,03-rename,04-settings}.png
@@ -70,25 +71,22 @@ packaging/store/
 │  │  └─ en-US/poster-720x1080.png
 │  └─ hero/
 │     └─ super-hero-1920x1080.png
-├─ trailer/
-│  ├─ zh-CN/
-│  │  ├─ Melotag-<ver>-trailer-zh-CN.mp4
-│  │  ├─ thumbnail-1920x1080.png
-│  │  ├─ raw.mp4
-│  │  └─ beats.json
-│  ├─ ja-JP/   （与 zh-CN 同结构）
-│  └─ en-US/   （与 zh-CN 同结构）
+├─ trailer/                       # Remotion 宣传片项目
+│  ├─ src/  public/  remotion.config.ts ...
+│  ├─ zh-CN/  ja-JP/  en-US/      # 各语言缩略图 thumbnail-1920x1080.png
+│  └─ out/                        # 渲染产物（不入库）
 ├─ privacy/
 │  ├─ zh-CN/privacy.md
 │  ├─ ja-JP/privacy.md
 │  └─ en-US/privacy.md
+├─ audio/
+│  └─ README.md                   # BGM 出处、署名与剪辑命令
 └─ tools/
    ├─ Generate-StoreArt.py
-   ├─ Capture-StoreScreenshots.ps1
-   └─ Build-StoreTrailer.py
+   └─ Capture-StoreScreenshots.ps1
 ```
 
-除特别说明外，下文路径均相对于 `packaging/store/`；复现命令从仓库根目录 `D:\Project\Musictag` 执行。
+除特别说明外，下文路径均相对于 `store/`；复现命令从 melotag-release 仓库根目录执行（截图脚本需要同时有 Melotag 主仓库的 checkout，见 5.2）。
 
 ## 2. 三语 listing 与 Partner Center 字段映射
 
@@ -178,16 +176,16 @@ packaging/store/
 
 ## 5. 复现命令
 
-以下命令均从仓库根目录 `D:\Project\Musictag` 执行。它们只重新生成图片，不会提交、上传或发布任何内容。
+以下命令均从 melotag-release 仓库根目录执行。它们只重新生成图片与视频，不会提交、上传或发布任何内容。
 
 ### 5.1 生成 app tile、box art、三语 poster 与 hero art
 
 ```bash
-uv run --offline --with pillow python packaging/store/tools/Generate-StoreArt.py
+uv run --offline --with pillow python store/tools/Generate-StoreArt.py
 ```
 
-- 脚本读取 `docs/branding/melotag-logo.png` 和本机字体，不访问网络。
-- 默认输出到 `packaging/store/images`，生成 6 个 PNG：300×300 app tile、1080×1080 box art、3 张 720×1080 poster、1920×1080 hero art。
+- 脚本读取 `store/images/melotag-logo.png` 和本机字体，不访问网络。
+- 默认输出到 `store/images`，生成 6 个 PNG：300×300 app tile、1080×1080 box art、3 张 720×1080 poster、1920×1080 hero art。
 - 脚本会校验尺寸、sRGB ICC 配置和单文件小于 50 MB。
 - `--offline` 依赖 uv 本地缓存中的 Pillow；如果缓存中没有 Pillow，需要先在有网络的环境准备该依赖。
 - 只生成某一组时，可使用 `--only tile`、`--only box`、`--only posters` 或 `--only hero`；`--out <目录>` 可改输出根目录。
@@ -195,7 +193,7 @@ uv run --offline --with pillow python packaging/store/tools/Generate-StoreArt.py
 ### 5.2 重新截取三语商店截图
 
 ```bash
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1
+pwsh -NoProfile -File store/tools/Capture-StoreScreenshots.ps1
 ```
 
 环境要求：
@@ -205,6 +203,7 @@ pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1
 - Windows 交互式桌面，屏幕至少 1920×1080，显示缩放 100%（96 DPI）。
 - UI Automation 可用。
 - `ffmpeg` 在 `PATH` 中；脚本用它生成演示音频和封面。
+- **Melotag 主仓库的 checkout**：脚本要构建并运行应用。默认找本仓库旁边的 `../Melotag`，不在同级时用 `-MelotagRepo <主仓库路径>` 指定。
 
 脚本会执行 Release 构建，在 `%TEMP%\MelotagStoreScreenshots` 生成独立的演示媒体与 `MELOTAG_DATA_DIR`，不会读写真实音乐库或 `%APPDATA%\Melotag`。演示元数据、歌词和封面均为虚构，且不触发在线搜索。输出为每语言 4 张、精确 1600×900 的 PNG，并校验尺寸和画面统计。
 
@@ -212,60 +211,66 @@ pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1
 
 ```powershell
 # 只重截部分语言
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1 -Languages zh-CN,en-US
+pwsh -NoProfile -File store/tools/Capture-StoreScreenshots.ps1 -Languages zh-CN,en-US
 
 # 复用已有 Release 构建
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1 -SkipBuild
+pwsh -NoProfile -File store/tools/Capture-StoreScreenshots.ps1 -SkipBuild
 
 # 保留 %TEMP% 下的演示素材，便于检查
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1 -KeepTemp
+pwsh -NoProfile -File store/tools/Capture-StoreScreenshots.ps1 -KeepTemp
 
-# 改输出目录
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1 -OutputRoot <目录>
+# 改输出目录；主仓库不在同级目录时
+pwsh -NoProfile -File store/tools/Capture-StoreScreenshots.ps1 -OutputRoot <目录> -MelotagRepo <主仓库路径>
 ```
 
-脚本会先删除所选语言的输出目录再重建；如需保留旧图，请先备份。默认输出到 `packaging/store/images/screenshots`。
+脚本会先删除所选语言的输出目录再重建；如需保留旧图，请先备份。默认输出到 `store/images/screenshots`。
 
-### 5.3 录制并合成宣传片（可选）
+### 5.3 渲染宣传片（Remotion）
 
-宣传片对应 Partner Center 的 Trailer 字段，不是上架必需项。三语版本都已录制完成，每条都从同一套脚本生成；文案在 `Build-StoreTrailer.py` 的 `CAPTIONS`、`TITLE`、`END` 中按语言维护，改文案不需要重录。
+宣传片对应 Partner Center 的 Trailer 字段，不是上架必需项。三语版本由 `trailer/` 下的 Remotion 项目纯程序化生成：标题卡、截图 Ken Burns 运镜、字幕与结尾卡全部是代码动画，配乐来自 ChiliChill《给你的BGM Vol.1》（使用需署名，见 [audio/README.md](audio/README.md)）。三语文案集中在 `trailer/src/data/captions.ts`，改文案只需改这一个文件并重新渲染，无需任何录制。
 
 ```bash
-# 1) 真实录屏：隔离演示库 + UIA 真实点击 + gdigrab 录制 1760x990@30fps
-#    每种语言执行一次（zh-CN / ja-JP / en-US）
-pwsh -NoProfile -File packaging/store/tools/Capture-StoreScreenshots.ps1 -Trailer -Languages zh-CN
+# 首次：安装依赖（渲染时还需网络加载 Google Fonts 字体）
+cd trailer && npm install
 
-# 2) 合成：标题卡、字幕、CC0 配乐、1080p 编码与规格校验
-uv run --offline --with pillow python packaging/store/tools/Build-StoreTrailer.py --lang zh-CN
+# 预览调参
+npx remotion studio
+
+# 渲染三语成片（1920×1080、30 fps、约 40 秒）
+npx remotion render src/index.ts trailer-zh-CN out/Melotag-<ver>-trailer-zh-CN.mp4
+npx remotion render src/index.ts trailer-ja-JP out/Melotag-<ver>-trailer-ja-JP.mp4
+npx remotion render src/index.ts trailer-en-US out/Melotag-<ver>-trailer-en-US.mp4
+
+# 渲染各语言 Trailer 缩略图（1920×1080 PNG，入库）
+npx remotion still src/index.ts thumb-zh-CN zh-CN/thumbnail-1920x1080.png
+npx remotion still src/index.ts thumb-ja-JP ja-JP/thumbnail-1920x1080.png
+npx remotion still src/index.ts thumb-en-US en-US/thumbnail-1920x1080.png
 ```
 
-产物在 `trailer/<lang>/`（三语各一份）：
+产物与校验：
 
 | 文件 | 说明 |
 | --- | --- |
-| `Melotag-<ver>-trailer-<lang>.mp4` | 1920×1080、30 fps、H.264 High + AAC、约 39 秒、`-movflags +faststart` |
-| `thumbnail-1920x1080.png` | 上传 Trailer 时要求的 1920×1080 PNG 缩略图 |
-| `raw.mp4` | 原始录屏（1760×990）；只改字幕或卡片时不必重录 |
-| `beats.json` | 每个章节的时间点，字幕据此对齐 |
+| `trailer/out/Melotag-<ver>-trailer-<lang>.mp4` | 1920×1080、30 fps、H.264 + AAC、约 40 秒、faststart；上传 Partner Center |
+| `trailer/<lang>/thumbnail-1920x1080.png` | 上传 Trailer 时要求的 1920×1080 PNG 缩略图；入库 |
 
-配乐放在 `audio/soft-music-cc0.mp3`（CC0 1.0，可商用、无需署名），出处、许可证原文与校验和见 [audio/README.md](audio/README.md)。换曲用 `--music <文件>`；文件缺失时脚本会退回内置合成铺底。
+渲染完成后可用 `trailer/scripts/validate.sh`（ffprobe）复检分辨率、帧率、编码、时长与 faststart。
 
 内容与合规约定：
 
-- 画面只用隔离演示库（虚构曲名、LRC、封面），不读取真实音乐库、不联网搜索，录制前后会比对音频文件哈希。
-- 对话框窗口自带约 22 px 的圆角/阴影内边距，录制时按 `-Overscan 30` 放大，让这圈边距落到画面外，避免边缘露出主窗口。
-- 配乐是 Freesound 的 CC0 曲目 *Soft Music*：截取前 39 秒、归一化到 -22 LUFS、首尾淡入淡出，不含需要署名或限制商用的素材。换曲后请实际听一遍再上传。
-- 卡片、缩略图与字幕统一使用 Source Han Sans SC / Noto Sans（OFL-1.1），与商店图同一套字体，见 [images/FONT-LICENSES.md](images/FONT-LICENSES.md)。
-- 成片 MP4 与中间录屏 `raw.mp4` 不进入 Git（见 `.gitignore`），只提交脚本、缩略图与章节时间点；上传 Store 时从工作区取文件。
-- 不使用年龄分级标识、微软或其他平台品牌标识。应用上架前，结尾卡只写“免费 / Windows 10-11 / x64 与 arm64”和 GitHub 地址，不写“在 Microsoft Store 下载”。
-- Trailer 需单独通过认证；时长控制在 60 秒内更稳妥，画面必须与当前版本界面一致。
-- `raw.mp4` 是复现中间产物，不入库也不上传；`beats.json` 入库用于同步字幕时间点，但不上传。
+- 画面只用入库的三语商店截图（虚构演示内容，见第 3 节），不包含真实音乐库或用户文件。
+- 配乐：ChiliChill《给你的BGM Vol.1》，专辑简介开放各类使用、引用时提及名字；出处、剪辑与署名方式见 [audio/README.md](audio/README.md)。上传时在视频备注中注明出处。
+- 字体：渲染时通过 `@remotion/google-fonts` 加载 Noto Sans SC / Noto Sans JP / Noto Sans（OFL-1.1），仓库不捆绑字体文件。
+- Remotion 许可：对个人与不超过 3 人的团队免费；本项目适用免费条款，见 [trailer/README.md](trailer/README.md)。
+- 成片 MP4 不进入 Git（见 `.gitignore` 的 `trailer/out/`），只提交项目代码与缩略图。
+- 不使用年龄分级标识、微软或其他平台品牌标识。应用上架前，结尾卡只写"免费 / Windows 10-11 / x64 与 arm64"和 GitHub 地址，不写"在 Microsoft Store 下载"。
+- Trailer 需单独通过认证；时长控制在 60 秒内更稳妥，画面必须与当前版本界面一致（截图过期时先用 5.2 重截）。
 
 ## 6. 上传顺序建议
 
 1. 在 Partner Center 预留或确认产品名称，创建 Windows PC 应用，记录三个产品标识。
 2. 填写 Properties：Free、Music、Windows 10 2004+ x64/arm64、支持 URL、网站、版权和开发者信息。
-3. 将 `packaging/store/privacy/` 推送到公开仓库的 `main` 分支，验证三个隐私政策 URL 可公开访问后，再填入 Partner Center。
+3. 将 `store/privacy/` 推送到公开仓库（melotag-release）的 `main` 分支，验证三个隐私政策 URL 可公开访问后，再填入 Partner Center。
 4. 完成 IARC 问卷并取得评级结果；在证书签发前不要填写或宣称评级。
 5. 生成并上传 `.msixbundle`，确认包版本为 `1.4.1.0` 且包标识与 Partner Center 一致。
 6. 按 zh-CN、ja-JP、en-US 分别填写 listing，上传对应 4 张截图和 caption，以及 300×300 商店图标。
@@ -277,9 +282,9 @@ uv run --offline --with pillow python packaging/store/tools/Build-StoreTrailer.p
 
 ## 7. 不要上传或不要打包的内容
 
-- `tools/`：图片生成、截图和宣传片脚本，不是商店素材；不要上传，也不要放进 MSIX。
-- `trailer/*/raw.mp4`、`trailer/*/beats.json`、`trailer/*/.build/`：录制与合成中间产物，只上传成片 MP4 与缩略图。
-- `audio/`：配乐源文件与许可说明，已嵌入成片；不要把音频单独上传到 Store。
+- `tools/`：图片生成与截图脚本，不是商店素材；不要上传，也不要放进 MSIX。
+- `trailer/out/`、`trailer/node_modules/`：渲染产物与依赖，只上传成片 MP4 与缩略图。
+- `audio/`：配乐出处与剪辑说明（音频本身在 `trailer/public/bgm.m4a`，已嵌入成片）；不要把音频单独上传到 Store。
 - `submission/`：提交辅助文档，不是商店素材；只有 `certification-notes.md` 的英文正文按需粘贴到认证备注字段。
 - `listing/*/listing.md`：作为复制源，不要把 Markdown 文件当作图片或 listing 附件上传。
 - `privacy/*/privacy.md`：作为待发布网页源文件，不要作为图片素材上传；应在公开后可访问时填写 URL。
@@ -288,15 +293,15 @@ uv run --offline --with pillow python packaging/store/tools/Build-StoreTrailer.p
 
 ## 8. 隐私政策 URL 与发布状态
 
-建议使用以下 GitHub `main` 分支路径，但它们在推送到公开仓库后才有效：
+隐私政策源文件在本仓库 `store/privacy/`，建议使用以下 GitHub `main` 分支路径（推送本仓库后生效）：
 
 | 语言 | 建议 URL |
 | --- | --- |
-| zh-CN | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/zh-CN/privacy.md |
-| ja-JP | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/ja-JP/privacy.md |
-| en-US | https://github.com/zdxiaoda/Melotag/blob/main/packaging/store/privacy/en-US/privacy.md |
+| zh-CN | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/zh-CN/privacy.md |
+| ja-JP | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/ja-JP/privacy.md |
+| en-US | https://github.com/zdxiaoda/melotag-release/blob/main/store/privacy/en-US/privacy.md |
 
-截至本文整理时，`packaging/store/` 在当前工作区尚未被 Git 跟踪；上述链接在推送前不可用。本文档不表示隐私政策已经公开。推送后请用无痕窗口或未登录浏览器逐个打开，确认无需登录、没有 404、渲染正常，再填入 Partner Center。如果仓库不是公开仓库，这些链接不能作为公开隐私政策 URL。
+上述链接在推送到公开仓库前不可用。本文档不表示隐私政策已经公开。推送后请用无痕窗口或未登录浏览器逐个打开，确认无需登录、没有 404、渲染正常，再填入 Partner Center。如果仓库不是公开仓库，这些链接不能作为公开隐私政策 URL。
 
 ## 9. 提交文档索引
 

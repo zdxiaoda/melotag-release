@@ -34,7 +34,7 @@
 | 用户主动选择本地音频、歌词和封面文件；保存/重命名时写回这些文件 | `src/Melotag.Tags/TagLibTagStore.cs`；`src/Melotag.UI/ViewModels/MainWindowViewModel.cs` |
 | 用户可以编辑、导入、导出、保存自己的歌词和封面；封面可来自本地图片或在线搜索 | 歌词面板、封面工具、`TagLibTagStore.Write` |
 | 在线查询由用户发起，结果来自第三方服务 | `src/Melotag.Core/Sources`：网易云音乐、QQ 音乐、酷狗、酷我、MusicBrainz、Cover Art Archive、iTunes Search API、Last.fm、LRCLIB |
-| 在线查询发送搜索文本；不上传音频内容、内嵌封面、歌词全文或完整路径 | `packaging/store/privacy/*/privacy.md`；`src/Melotag.Core/Sources` 的查询参数 |
+| 在线查询发送搜索文本；不上传音频内容、内嵌封面、歌词全文或完整路径 | `store/privacy/*/privacy.md`；`src/Melotag.Core/Sources` 的查询参数 |
 | 设置和历史保存在本机 `%APPDATA%\Melotag`（可用 `MELOTAG_DATA_DIR` 覆盖） | `src/Melotag.Storage`；隐私政策 |
 | 启动时默认查询 GitHub Releases 最新版本，可在设置中关闭 | `src/Melotag.Core/Services/UpdateService.cs`、`src/Melotag.UI/Views/UpdateUi.cs` |
 | 应用不内置音乐、歌词或封面内容 | 仓库只包含品牌资源；截图演示素材由截图脚本临时生成，且为虚构内容 |
