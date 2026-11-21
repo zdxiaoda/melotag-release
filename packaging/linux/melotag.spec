@@ -14,6 +14,7 @@ BuildArch:      x86_64
 Requires:       glibc fontconfig freetype libICE libSM libX11 libxcb libxkbcommon
 Requires:       libXrandr libXi libXcursor libXinerama mesa-libEGL mesa-libGL glib2
 Recommends:     dotnet-runtime-10.0
+Recommends:     gstreamer1-libav
 
 %description
 音签 Melotag - 跨平台音乐标签编辑器。
