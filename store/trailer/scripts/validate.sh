@@ -34,7 +34,7 @@ for file in "$@"; do
     | grep -q "codec_name=aac" || fail "$file: audio codec is not aac"
 
   # moov atom must precede mdat for streaming playback (faststart).
-  order=$(ffmpeg -v trace -i "$file" 2>&1 | grep -o "type:'m\(oov\|dat\)'" | head -1)
+  order=$(ffmpeg -v trace -i "$file" 2>&1 | grep -m1 -o "type:'m\(oov\|dat\)'" || true)
   [[ $order == "type:'moov'" ]] || fail "$file: moov atom not first (no faststart); fix with: ffmpeg -i '$file' -c copy -movflags +faststart '$file.fixed.mp4'"
 
   echo "OK    $file (${duration}s)"
