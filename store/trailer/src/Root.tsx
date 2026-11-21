@@ -5,9 +5,11 @@ import { loadFont as loadNotoSansJP } from "@remotion/google-fonts/NotoSansJP";
 import { loadFont as loadNotoSansSC } from "@remotion/google-fonts/NotoSansSC";
 import { Trailer } from "./Trailer";
 import { Thumbnail } from "./Thumbnail";
-import { FPS, HEIGHT, LANGUAGE_CODES, WIDTH, getLanguage, totalFrames } from "./data/captions";
+import { FPS, HEIGHT, LANGUAGE_CODES, WIDTH, getLanguage, totalFramesAll } from "./data/captions";
+import "./loadFonts";
 
-// Fonts load over the network at render time (OFL-1.1, not bundled).
+// Noto fonts load over the network at render time (OFL-1.1, not bundled);
+// Smiley Sans ships with the project (see src/loadFonts.ts).
 loadNotoSans("normal", { weights: ["400", "700"], subsets: ["latin"] });
 loadNotoSansSC("normal", { weights: ["400", "700"], subsets: ["chinese-simplified", "latin"] });
 loadNotoSansJP("normal", { weights: ["400", "700"], subsets: ["japanese", "latin"] });
@@ -20,7 +22,7 @@ export const RemotionRoot: React.FC = () => {
           key={`trailer-${code}`}
           id={`trailer-${code}`}
           component={Trailer}
-          durationInFrames={totalFrames(getLanguage(code))}
+          durationInFrames={totalFramesAll()}
           fps={FPS}
           width={WIDTH}
           height={HEIGHT}

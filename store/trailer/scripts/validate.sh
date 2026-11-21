@@ -25,7 +25,7 @@ for file in "$@"; do
   echo "$probe" | grep -q "width=1920" || fail "$file: width is not 1920"
   echo "$probe" | grep -q "height=1080" || fail "$file: height is not 1080"
   echo "$probe" | grep -q "pix_fmt=yuv420p" || fail "$file: pixel format is not yuv420p"
-  echo "$probe" | grep -q "avg_frame_rate=30/1" || fail "$file: fps is not 30"
+  echo "$probe" | grep -q "avg_frame_rate=60/1" || fail "$file: fps is not 60"
 
   duration=$(echo "$probe" | sed -n 's/^duration=//p')
   awk -v d="$duration" 'BEGIN { exit !(d > 0 && d <= 60) }' || fail "$file: duration $duration s outside 0-60 s"

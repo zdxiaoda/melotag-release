@@ -69,17 +69,22 @@ SOURCE_LOGO = ROOT / "store" / "images" / "melotag-logo.png"
 PURPLE = (110, 91, 245)       # #6E5BF5
 CYAN = (24, 190, 214)         # #18BED6
 CYAN_LIGHT = (139, 231, 245)
-HEAD = (245, 247, 255)
-BODY = (169, 180, 208)
-DIM = (128, 140, 171)
-INK_TOP = (13, 16, 36)
-INK_BOTTOM = (4, 6, 14)
+HEAD = (27, 33, 64)           # #1B2140 dark navy copy on light art
+BODY = (74, 85, 112)          # #4A5570
+DIM = (111, 122, 148)         # #6F7A94
 
 WINDIR = Path(os.environ.get("WINDIR", r"C:\Windows"))
 FONT_DIR = WINDIR / "Fonts"
 USER_FONT_DIR = Path(
     os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))
 ) / "Microsoft" / "Windows" / "Fonts"
+# Cross-platform font locations so the artwork can also be regenerated on
+# Linux/macOS; every candidate is still a locally installed OFL-1.1 face.
+HOME_FONT_DIR = Path.home() / ".local" / "share" / "fonts"
+SYSTEM_FONT_DIR = Path("/usr/share/fonts/truetype/noto")
+# The trailer project bundles Smiley Sans (得意黑) for the Remotion render;
+# the artwork reads that same verified file instead of requiring an install.
+BUNDLED_FONT_DIR = ROOT / "store" / "trailer" / "public" / "fonts"
 
 OFL_11 = "SIL Open Font License 1.1"
 NOTO_SANS_SOURCE = "https://github.com/notofonts/latin-greek-cyrillic"
@@ -117,6 +122,11 @@ FONT_CANDIDATES: dict[str, list[FontSource]] = {
             "3a08a47daa00cade516425c15c57615aef2fd418ec9811a7b9f465088f92cc05",
         ),
         FontSource(
+            SYSTEM_FONT_DIR / "NotoSans-Bold.ttf", 0, None, "Noto Sans", "Bold",
+            OFL_11, NOTO_SANS_SOURCE,
+            "",
+        ),
+        FontSource(
             FONT_DIR / "LiberationSans-Bold.ttf", 0, None, "Liberation Sans", "Bold",
             OFL_11, LIBERATION_SOURCE,
             "788abee4c806d660e8aee46689dd8540cd4bb98da03dcc9d171ce3efd99a9173",
@@ -129,19 +139,53 @@ FONT_CANDIDATES: dict[str, list[FontSource]] = {
             "f5f552c8c5edb61fe6efb824baf4d4de47b1a8689ab4925ff43f7bd6a4ebece5",
         ),
         FontSource(
+            SYSTEM_FONT_DIR / "NotoSans-Regular.ttf", 0, None, "Noto Sans", "Regular",
+            OFL_11, NOTO_SANS_SOURCE,
+            "",
+        ),
+        FontSource(
             FONT_DIR / "LiberationSans-Regular.ttf", 0, None, "Liberation Sans", "Regular",
             OFL_11, LIBERATION_SOURCE,
             "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
         ),
     ],
+    # Display face for marketing headlines and the wordmark: Smiley Sans
+    # (得意黑, SIL OFL 1.1).  Preferred source is the copy bundled with the
+    # trailer project so every machine renders with the identical file.
+    "display": [
+        FontSource(
+            BUNDLED_FONT_DIR / "SmileySans-Oblique.otf", 0, None,
+            "Smiley Sans", "Oblique", OFL_11,
+            "https://github.com/atelier-anchor/smiley-sans",
+            "139b5dcbe70d6d52de85a62d148784c6af4bd161e38fdb62ba0c1e7e5065fca6",
+        ),
+        FontSource(
+            USER_FONT_DIR / "SmileySans-Oblique.ttf", 0, None,
+            "Smiley Sans", "Oblique", OFL_11,
+            "https://github.com/atelier-anchor/smiley-sans",
+            "",
+        ),
+        FontSource(
+            HOME_FONT_DIR / "SmileySans-Oblique.otf", 0, None,
+            "Smiley Sans", "Oblique", OFL_11,
+            "https://github.com/atelier-anchor/smiley-sans",
+            "",
+        ),
+    ],
     # CJK copy: Source Han Sans SC 2.005R per-user install (OFL 1.1, RFN 'Source').
     # The SC regional OTFs cover all Simplified Chinese and Japanese copy used
-    # here; no JP-specific OFL font is installed on this machine.
+    # here; the CN build installed under the user font directory covers the
+    # same set and is the cross-platform fallback.
     "zh_bold": [
         FontSource(
             USER_FONT_DIR / "SourceHanSansSC-Bold.otf", 0, None,
             "Source Han Sans SC", "Bold", OFL_11, SOURCE_HAN_SOURCE,
             "df2b90f5bcc6d01dfc964cec5f6d535d6b6aebd26ed7fd79a9c1b3f2112fcb6b",
+        ),
+        FontSource(
+            HOME_FONT_DIR / "SourceHanSansCN-Bold.otf", 0, None,
+            "Source Han Sans CN", "Bold", OFL_11, SOURCE_HAN_SOURCE,
+            "",
         ),
         FontSource(
             USER_FONT_DIR / "SourceHanSansCN-Bold.otf", 0, None,
@@ -161,6 +205,11 @@ FONT_CANDIDATES: dict[str, list[FontSource]] = {
             "f1d8611151880c6c336aabeac4640ef434fa13cbfbf1ffe82d0a71b2a5637256",
         ),
         FontSource(
+            HOME_FONT_DIR / "SourceHanSansCN-Regular.otf", 0, None,
+            "Source Han Sans CN", "Regular", OFL_11, SOURCE_HAN_SOURCE,
+            "",
+        ),
+        FontSource(
             USER_FONT_DIR / "SourceHanSansCN-Regular.otf", 0, None,
             "Source Han Sans CN", "Regular", OFL_11, SOURCE_HAN_SOURCE,
             "e2bc8a2e7f37474b774fff8db758681ece40bb6947a90d571bce9dd60671a8e4",
@@ -173,12 +222,18 @@ FONT_CANDIDATES: dict[str, list[FontSource]] = {
     ],
     # Japanese copy uses the same OFL CJK family; the Generation JP subset is not
     # installed.  Kana, JP punctuation and every kanji used by the copy are
-    # covered and glyph-checked at runtime.
+    # covered and glyph-checked at runtime.  Headlines stay on the CJK family
+    # because Smiley Sans does not ship kana glyphs.
     "ja_bold": [
         FontSource(
             USER_FONT_DIR / "SourceHanSansSC-Bold.otf", 0, None,
             "Source Han Sans SC", "Bold", OFL_11, SOURCE_HAN_SOURCE,
             "df2b90f5bcc6d01dfc964cec5f6d535d6b6aebd26ed7fd79a9c1b3f2112fcb6b",
+        ),
+        FontSource(
+            HOME_FONT_DIR / "SourceHanSansCN-Bold.otf", 0, None,
+            "Source Han Sans CN", "Bold", OFL_11, SOURCE_HAN_SOURCE,
+            "",
         ),
         FontSource(
             USER_FONT_DIR / "SourceHanSansCN-Bold.otf", 0, None,
@@ -196,6 +251,11 @@ FONT_CANDIDATES: dict[str, list[FontSource]] = {
             USER_FONT_DIR / "SourceHanSansSC-Regular.otf", 0, None,
             "Source Han Sans SC", "Regular", OFL_11, SOURCE_HAN_SOURCE,
             "f1d8611151880c6c336aabeac4640ef434fa13cbfbf1ffe82d0a71b2a5637256",
+        ),
+        FontSource(
+            HOME_FONT_DIR / "SourceHanSansCN-Regular.otf", 0, None,
+            "Source Han Sans CN", "Regular", OFL_11, SOURCE_HAN_SOURCE,
+            "",
         ),
         FontSource(
             USER_FONT_DIR / "SourceHanSansCN-Regular.otf", 0, None,
@@ -470,7 +530,7 @@ def audit_text_coverage() -> None:
     """Fail before rendering if any exact copy character lacks a real glyph."""
     required: dict[str, list[str]] = {key: [] for key in FONTS}
     for spec in POSTER_SPECS.values():
-        required[spec["font_bold"]].extend(spec["headline"])
+        required[spec["font_display"]].extend(spec["headline"])
         required[spec["font_bold"]].append(spec["eyebrow"])
         required[spec["font_bold"]].extend(label for _, label in spec["pills"])
         required[spec["font_body"]].extend(spec["subhead"])
@@ -478,6 +538,7 @@ def audit_text_coverage() -> None:
         if spec["brand_sub"]:
             required[spec["font_bold"]].append(spec["brand_sub"])
     required["latin_semibold"].append("Melotag")
+    required["display"].append("Melotag")
     required["zh_bold"].append("音签")
 
     print("Glyph coverage (exact poster/box copy):")
@@ -675,7 +736,7 @@ def draw_gradient_arc(
 
 
 def draw_corner_ticks(draw: ImageDraw.ImageDraw, w: int, h: int, margin: int, length: int) -> None:
-    col = (190, 205, 235, 72)
+    col = (105, 120, 160, 95)
     wd = max(1, s(0.9))
     for x, y, dx, dy in (
         (margin, margin, 1, 1),
@@ -699,7 +760,7 @@ def draw_dot_grid(
 ) -> None:
     for y in range(y0, y1 + 1, step):
         for x in range(x0, x1 + 1, step):
-            draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(178, 200, 235, alpha))
+            draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(96, 116, 172, alpha))
 
 
 def add_ribbon(
@@ -823,10 +884,10 @@ def add_particles(
                 continue
         placed += 1
         r = rng.uniform(0.8, 2.5) * SS
-        col = mix((186, 206, 245), CYAN_LIGHT, rng.random() * 0.85)
-        d.ellipse((x - r, y - r, x + r, y + r), fill=rgba(col, rng.randint(22, 92)))
+        col = mix((110, 130, 195), (24, 190, 214), rng.random() * 0.85)
+        d.ellipse((x - r, y - r, x + r, y + r), fill=rgba(col, rng.randint(30, 96)))
         if rng.random() < 0.10:
-            add_glow(layer, x, y, r * 7.0, col, 14)
+            add_glow(layer, x, y, r * 7.0, col, 16)
     # a few brighter accent specks
     for _ in range(max(2, count // 40)):
         x = rng.uniform(0.08, 0.92) * W
@@ -835,7 +896,7 @@ def add_particles(
             rx0, ry0, rx1, ry1 = avoid_rect
             if rx0 <= x <= rx1 and ry0 <= y <= ry1:
                 continue
-        add_glow(layer, x, y, 7.0 * SS, CYAN_LIGHT, 34)
+        add_glow(layer, x, y, 7.0 * SS, PURPLE, 26)
 
 
 # --------------------------------------------------------------------------- #
@@ -846,6 +907,7 @@ POSTER_SPECS = {
     "zh-CN": {
         "font_bold": "zh_bold",
         "font_body": "zh_regular",
+        "font_display": "display",
         "brand_sub": "音签",
         "eyebrow": "本地音乐库整理工具",
         "eyebrow_size": 19,
@@ -862,6 +924,7 @@ POSTER_SPECS = {
     "ja-JP": {
         "font_bold": "ja_bold",
         "font_body": "ja_regular",
+        "font_display": "ja_bold",
         "brand_sub": "",
         "eyebrow": "音楽ライブラリ整理ツール",
         "eyebrow_size": 19,
@@ -878,6 +941,7 @@ POSTER_SPECS = {
     "en-US": {
         "font_bold": "latin_semibold",
         "font_body": "latin_regular",
+        "font_display": "display",
         "brand_sub": "",
         "eyebrow": "MUSIC LIBRARY ORGANIZER",
         "eyebrow_size": 18,
@@ -899,7 +963,7 @@ POSTER_TEXT_LIMIT = 708  # key copy stays above the bottom third (720)
 
 
 def draw_feature_icon(draw: ImageDraw.ImageDraw, kind: str, cx: float, cy: float, size: float) -> None:
-    col = rgba(CYAN_LIGHT, 235)
+    col = rgba(PURPLE, 215)
     wd = max(1, int(round(size * 0.13)))
     r = size / 2.0
     if kind == "tag":
@@ -913,7 +977,7 @@ def draw_feature_icon(draw: ImageDraw.ImageDraw, kind: str, cx: float, cy: float
         draw.polygon(pts, fill=col)
         draw.ellipse(
             (cx - r * 0.53, cy - r * 0.13, cx - r * 0.27, cy + r * 0.13),
-            fill=(13, 18, 36, 255),
+            fill=(255, 255, 255, 255),
         )
     elif kind == "lyrics":
         for i, frac in enumerate((1.0, 0.72, 0.44)):
@@ -988,15 +1052,15 @@ def draw_pills(
             layer.rounded_rectangle(
                 (cx, y, cx + w, y + height),
                 radius=radius,
-                fill=(255, 255, 255, 13),
-                outline=(196, 210, 240, 34),
+                fill=(110, 91, 245, 16),
+                outline=(110, 91, 245, 46),
                 width=max(1, s(0.8)),
             )
             icx = cx + pad + icon / 2
             icy = y + height / 2
             draw_feature_icon(layer, items[i][0], icx, icy, icon)
             baseline = y + (height - (ascent + descent)) / 2 + ascent
-            layer.text((cx + pad + icon + gap, baseline), items[i][1], font=font, fill=rgba((226, 233, 250)), anchor="ls")
+            layer.text((cx + pad + icon + gap, baseline), items[i][1], font=font, fill=rgba((52, 62, 92)), anchor="ls")
             cx += w + between
         y += height + s(10)
     return y - s(10)
@@ -1007,15 +1071,15 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     cx = W / 2
 
     img = make_background(
-        W, H, (14, 18, 40), (4, 6, 13),
+        W, H, (247, 249, 255), (226, 233, 250),
         [
-            (0.86, 0.05, 0.62, PURPLE, 92),
-            (0.02, 0.48, 0.56, CYAN, 52),
-            (1.05, 0.72, 0.58, CYAN, 46),
-            (0.40, 0.96, 0.70, (42, 64, 158), 60),
+            (0.86, 0.05, 0.62, PURPLE, 60),
+            (0.02, 0.48, 0.56, CYAN, 40),
+            (1.05, 0.72, 0.58, CYAN, 36),
+            (0.40, 0.96, 0.70, (150, 170, 245), 46),
         ],
-        vignette=0.44,
-        grain=0.015,
+        vignette=0.10,
+        grain=0.008,
     )
 
     # --- background decoration ------------------------------------------- #
@@ -1023,30 +1087,30 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     dd = ImageDraw.Draw(deco)
 
     # huge tag outline, cropped by the top-right corner
-    watermark = tag_outline(s(560), border=max(2, s(1.3)), alpha=58, rotation=17)
+    watermark = tag_outline(s(560), border=max(2, s(1.3)), alpha=44, rotation=17)
     img.paste(watermark, (int(cx + s(120)), int(-s(150))), watermark)
 
     # faint engineering dots + corner ticks
-    draw_dot_grid(dd, s(438), s(44), s(688), s(250), s(33), max(1, s(1.15)), alpha=22)
+    draw_dot_grid(dd, s(438), s(44), s(688), s(250), s(33), max(1, s(1.15)), alpha=26)
     draw_corner_ticks(dd, W, H, s(30), s(11))
 
     # a single long arc echoes the tag hole
     draw_gradient_arc(
         dd,
         (cx + s(238), -s(122), cx + s(584), s(224)),
-        96, 268, max(1, s(1.3)), PURPLE, CYAN, 46, segments=80,
+        96, 268, max(1, s(1.3)), PURPLE, CYAN, 42, segments=80,
     )
     img.paste(deco, (0, 0), deco)
 
     # --- bottom-third visual (no copy down here) ------------------------- #
     glow_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    add_glow(glow_layer, W * 0.80, H * 0.94, W * 0.48, CYAN, 46)
-    add_glow(glow_layer, W * 0.10, H * 0.99, W * 0.40, PURPLE, 44)
+    add_glow(glow_layer, W * 0.80, H * 0.94, W * 0.48, CYAN, 36)
+    add_glow(glow_layer, W * 0.10, H * 0.99, W * 0.40, PURPLE, 34)
     img.paste(glow_layer, (0, 0), glow_layer)
 
     bottom = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     bd = ImageDraw.Draw(bottom)
-    for radius, alpha in ((s(250), 52), (s(320), 40), (s(390), 30)):
+    for radius, alpha in ((s(250), 42), (s(320), 32), (s(390), 24)):
         draw_gradient_arc(
             bd,
             (s(92) - radius, s(1122) - radius, s(92) + radius, s(1122) + radius),
@@ -1057,14 +1121,14 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     add_ribbon(
         img,
         -s(40), W + s(40), s(942), s(48), s(22), -0.85,
-        PURPLE, CYAN, alpha=82, core_alpha=120, glow_radius=s(18),
+        PURPLE, CYAN, alpha=70, core_alpha=104, glow_radius=s(18),
     )
-    add_glow(img, s(536), s(1000), s(300), (60, 210, 232), 32)
+    add_glow(img, s(536), s(1000), s(300), (60, 210, 232), 26)
     add_eq_bars(
         img,
         s(410), s(1094),
         [s(v) for v in (46, 102, 168, 78, 222, 134, 278, 98, 200, 124, 294, 158, 88, 234, 146, 64, 210, 114, 256, 84)],
-        s(8), s(7), alpha=155,
+        s(8), s(7), alpha=150,
     )
     add_particles(
         img,
@@ -1083,7 +1147,7 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     text = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     dt = ImageDraw.Draw(text)
 
-    word_font = load_font("latin_semibold", s(30))
+    word_font = load_font("display", s(30))
     wa, wd_ = word_font.getmetrics()
     word_x = s(POSTER_MARGIN) + mark_size + s(17)
     word_baseline = mark_cy + (wa - wd_) / 2 - s(1)
@@ -1099,11 +1163,11 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
             s(POSTER_W - POSTER_MARGIN),
         )
         sa, sd = sub_font.getmetrics()
-        dt.text((sx, word_baseline), spec["brand_sub"], font=sub_font, fill=rgba((153, 165, 196)), anchor="ls")
+        dt.text((sx, word_baseline), spec["brand_sub"], font=sub_font, fill=rgba((122, 132, 162)), anchor="ls")
         div_x = sx - s(8)
         du.line(
             (div_x, mark_cy - s(9), div_x, mark_cy + s(9)),
-            fill=(170, 185, 215, 70), width=max(1, s(0.8)),
+            fill=(120, 135, 175, 90), width=max(1, s(0.8)),
         )
 
     # --- eyebrow ---------------------------------------------------------- #
@@ -1113,7 +1177,7 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     dot_r = s(3.4)
     du.ellipse(
         (s(POSTER_MARGIN), ey_top + ea * 0.44 - dot_r, s(POSTER_MARGIN) + dot_r * 2, ey_top + ea * 0.44 + dot_r),
-        fill=rgba(CYAN_LIGHT, 235),
+        fill=rgba((14, 138, 160), 235),
     )
     check_fit(
         "eyebrow",
@@ -1124,13 +1188,13 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     )
     draw_tracked(
         dt, s(POSTER_MARGIN + 16), ey_top + ea,
-        spec["eyebrow"], eyebrow_font, rgba(CYAN_LIGHT, 238),
+        spec["eyebrow"], eyebrow_font, rgba((14, 138, 160), 238),
         tracking=s(spec["eyebrow_tracking"]),
     )
 
     # --- headline --------------------------------------------------------- #
     head_font, head_lh, widths, head_h = fit_headline(
-        spec["headline"], spec["font_bold"], s(spec["headline_size"]),
+        spec["headline"], spec["font_display"], s(spec["headline_size"]),
         max_width=s(POSTER_W - POSTER_MARGIN * 2), max_height=s(212),
     )
     head_top = s(218)
@@ -1175,7 +1239,7 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
         )
     du.ellipse(
         (s(POSTER_MARGIN), note_baseline - na * 0.30 - s(2.4), s(POSTER_MARGIN) + s(4.8), note_baseline - na * 0.30 + s(2.4)),
-        fill=rgba((139, 158, 195), 210),
+        fill=rgba((110, 91, 245), 170),
     )
     dt.text(
         (s(POSTER_MARGIN + 14), note_baseline), spec["note"],
@@ -1197,8 +1261,8 @@ def render_poster(lang: str, spec: dict, out_path: Path) -> dict:
     # --- composite foreground -------------------------------------------- #
     img.paste(ui, (0, 0), ui)
 
-    shadow_alpha = text.getchannel("A").point(lambda v: int(v * 0.46))
-    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    shadow_alpha = text.getchannel("A").point(lambda v: int(v * 0.16))
+    shadow = Image.new("RGBA", (W, H), (40, 55, 110, 0))
     shadow.putalpha(shadow_alpha.filter(ImageFilter.GaussianBlur(s(4.0))))
     img.paste(shadow, (0, s(3)), shadow)
     img.paste(text, (0, 0), text)
@@ -1224,44 +1288,44 @@ def render_box_art(out_path: Path) -> dict:
     cx = W / 2
 
     img = make_background(
-        W, H, (15, 19, 42), (4, 5, 12),
+        W, H, (247, 249, 255), (224, 231, 249),
         [
-            (0.18, 0.12, 0.58, PURPLE, 82),
-            (0.86, 0.84, 0.58, CYAN, 74),
-            (0.50, 0.45, 0.70, (52, 62, 166), 36),
-            (0.95, 0.12, 0.40, PURPLE, 36),
+            (0.18, 0.12, 0.58, PURPLE, 62),
+            (0.86, 0.84, 0.58, CYAN, 54),
+            (0.50, 0.45, 0.70, (150, 170, 245), 30),
+            (0.95, 0.12, 0.40, PURPLE, 28),
         ],
-        vignette=0.46,
-        grain=0.014,
+        vignette=0.10,
+        grain=0.008,
     )
 
     deco = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     dd = ImageDraw.Draw(deco)
-    wm = tag_outline(s(620), border=max(2, s(1.5)), alpha=48, rotation=12, hole=False)
+    wm = tag_outline(s(620), border=max(2, s(1.5)), alpha=36, rotation=12, hole=False)
     img.paste(wm, (int(cx - wm.width / 2), int(s(316) - wm.height / 2)), wm)
 
-    for radius, alpha, start, end in ((s(330), 38, 196, 338), (s(420), 26, 20, 160), (s(500), 18, 120, 288)):
+    for radius, alpha, start, end in ((s(330), 30, 196, 338), (s(420), 20, 20, 160), (s(500), 14, 120, 288)):
         draw_gradient_arc(
             dd, (cx - radius, s(316) - radius, cx + radius, s(316) + radius),
             start, end, max(1, s(1.1)), PURPLE, CYAN, alpha,
         )
-    draw_dot_grid(dd, s(58), s(60), s(250), s(250), s(30), max(1, s(1.1)), alpha=20)
+    draw_dot_grid(dd, s(58), s(60), s(250), s(250), s(30), max(1, s(1.1)), alpha=26)
     img.paste(deco, (0, 0), deco)
 
-    add_glow(img, cx, s(316), s(320), PURPLE, 34)
+    add_glow(img, cx, s(316), s(320), PURPLE, 26)
     add_mark(img, cx, s(316), s(260), glow=True, shadow=True)
 
     # bottom third: light and waveform decoration only
-    add_glow(img, cx, s(860), s(330), (60, 205, 228), 20)
-    add_glow(img, s(220), s(1040), s(330), PURPLE, 18)
-    add_glow(img, cx, s(1006), s(300), (60, 205, 228), 30)
+    add_glow(img, cx, s(860), s(330), (60, 205, 228), 16)
+    add_glow(img, s(220), s(1040), s(330), PURPLE, 14)
+    add_glow(img, cx, s(1006), s(300), (60, 205, 228), 24)
     add_ribbon(
         img, -s(20), W + s(20), s(872), s(32), s(12), 1.8,
-        PURPLE, CYAN, alpha=52, core_alpha=70, glow_radius=s(14),
+        PURPLE, CYAN, alpha=42, core_alpha=58, glow_radius=s(14),
     )
     add_ribbon(
         img, -s(20), W + s(20), s(1018), s(21), s(10), -1.2,
-        PURPLE, CYAN, alpha=74, core_alpha=104, glow_radius=s(12),
+        PURPLE, CYAN, alpha=60, core_alpha=86, glow_radius=s(12),
     )
     add_eq_bars(
         img, s(430), s(1102),
@@ -1278,7 +1342,7 @@ def render_box_art(out_path: Path) -> dict:
     dt = ImageDraw.Draw(text)
     ui = Image.new("RGBA", (W, H), (0, 0, 0, 0))
 
-    word_font = load_font("latin_semibold", s(82))
+    word_font = load_font("display", s(82))
     wa, wd_ = word_font.getmetrics()
     word_tracking = s(2.2)
     word_top = s(480)
@@ -1299,7 +1363,7 @@ def render_box_art(out_path: Path) -> dict:
     sub_top = line_y + s(4) + s(20)
     check_fit("box suffix", tracked_width("音签", sub_font, s(2.0)), s(1000))
     draw_tracked(
-        dt, cx, sub_top + sa, "音签", sub_font, rgba((172, 184, 214)),
+        dt, cx, sub_top + sa, "音签", sub_font, rgba((122, 132, 162)),
         tracking=s(2.0), align="center",
     )
 
@@ -1314,8 +1378,8 @@ def render_box_art(out_path: Path) -> dict:
         raise RuntimeError("box art: text present below y=720")
 
     img.paste(ui, (0, 0), ui)
-    shadow_alpha = text.getchannel("A").point(lambda v: int(v * 0.34))
-    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    shadow_alpha = text.getchannel("A").point(lambda v: int(v * 0.14))
+    shadow = Image.new("RGBA", (W, H), (40, 55, 110, 0))
     shadow.putalpha(shadow_alpha.filter(ImageFilter.GaussianBlur(s(6.0))))
     img.paste(shadow, (0, s(2)), shadow)
     img.paste(text, (0, 0), text)
@@ -1336,29 +1400,29 @@ def render_hero(out_path: Path) -> dict:
     cx, cy = W / 2, H / 2
 
     img = make_background(
-        W, H, (12, 16, 36), (3, 4, 10),
+        W, H, (247, 249, 255), (222, 229, 248),
         [
-            (0.18, 0.20, 0.50, PURPLE, 100),
-            (0.86, 0.74, 0.52, CYAN, 88),
-            (0.52, 0.02, 0.46, (118, 74, 240), 42),
-            (0.48, 1.06, 0.62, (20, 150, 190), 34),
+            (0.18, 0.20, 0.50, PURPLE, 74),
+            (0.86, 0.74, 0.52, CYAN, 64),
+            (0.52, 0.02, 0.46, (118, 74, 240), 30),
+            (0.48, 1.06, 0.62, (20, 150, 190), 24),
         ],
-        vignette=0.52,
-        grain=0.014,
+        vignette=0.10,
+        grain=0.008,
     )
 
     deco = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     dd = ImageDraw.Draw(deco)
 
-    wm = tag_outline(s(1060), border=max(2, s(1.7)), alpha=22, rotation=-13, hole=False)
+    wm = tag_outline(s(1060), border=max(2, s(1.7)), alpha=18, rotation=-13, hole=False)
     img.paste(wm, (int(cx - wm.width / 2), int(cy - wm.height / 2)), wm)
 
     rings = (
-        (s(300), 78, 190, 342, 1.4),
-        (s(382), 58, 12, 152, 1.2),
-        (s(500), 44, 158, 302, 1.1),
-        (s(632), 26, 0, 360, 0.9),
-        (s(760), 20, 232, 330, 0.8),
+        (s(300), 62, 190, 342, 1.4),
+        (s(382), 46, 12, 152, 1.2),
+        (s(500), 34, 158, 302, 1.1),
+        (s(632), 20, 0, 360, 0.9),
+        (s(760), 14, 232, 330, 0.8),
     )
     for radius, alpha, start, end, lw in rings:
         draw_gradient_arc(
@@ -1366,30 +1430,30 @@ def render_hero(out_path: Path) -> dict:
             start, end, max(1, s(lw)), PURPLE, CYAN, alpha, segments=140,
         )
 
-    draw_dot_grid(dd, s(60), s(56), s(360), s(250), s(32), max(1, s(1.1)), alpha=18)
-    draw_dot_grid(dd, s(1560), s(830), s(1860), s(1024), s(32), max(1, s(1.1)), alpha=18)
+    draw_dot_grid(dd, s(60), s(56), s(360), s(250), s(32), max(1, s(1.1)), alpha=24)
+    draw_dot_grid(dd, s(1560), s(830), s(1860), s(1024), s(32), max(1, s(1.1)), alpha=24)
     draw_corner_ticks(dd, W, H, s(54), s(14))
     img.paste(deco, (0, 0), deco)
 
-    add_glow(img, cx, cy, s(470), PURPLE, 38)
-    add_glow(img, cx, cy, s(620), CYAN, 22)
+    add_glow(img, cx, cy, s(470), PURPLE, 30)
+    add_glow(img, cx, cy, s(620), CYAN, 18)
 
     # ribbons sweep behind the mark
     add_ribbon(
         img, -s(100), W + s(100), s(566), s(74), s(36), -0.6,
-        PURPLE, CYAN, alpha=54, core_alpha=88, glow_radius=s(24),
+        PURPLE, CYAN, alpha=44, core_alpha=70, glow_radius=s(24),
     )
     add_ribbon(
         img, -s(80), W + s(80), s(620), s(44), s(14), 2.1,
-        (158, 120, 245), (60, 214, 230), alpha=32, core_alpha=46, glow_radius=s(14),
+        (158, 120, 245), (60, 214, 230), alpha=26, core_alpha=36, glow_radius=s(14),
     )
 
     # soft bokeh depth, deliberately out of focus
     for bx, by, br, bcol, ba in (
-        (0.14, 0.30, 0.10, CYAN_LIGHT, 16),
-        (0.86, 0.24, 0.075, (170, 150, 255), 18),
-        (0.77, 0.86, 0.11, CYAN, 14),
-        (0.24, 0.82, 0.07, (150, 130, 255), 15),
+        (0.14, 0.30, 0.10, (120, 205, 228), 12),
+        (0.86, 0.24, 0.075, (170, 150, 255), 14),
+        (0.77, 0.86, 0.11, CYAN, 10),
+        (0.24, 0.82, 0.07, (150, 130, 255), 11),
     ):
         add_glow(img, bx * W, by * H, br * W, bcol, ba)
 
@@ -1397,8 +1461,8 @@ def render_hero(out_path: Path) -> dict:
 
     # a soft pool of light beneath the mark
     pedestal = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    add_glow(pedestal, cx, cy + s(252), s(310), CYAN_LIGHT, 20)
-    add_glow(pedestal, cx, cy + s(248), s(190), (255, 255, 255), 12)
+    add_glow(pedestal, cx, cy + s(252), s(310), (24, 190, 214), 18)
+    add_glow(pedestal, cx, cy + s(248), s(190), (255, 255, 255), 14)
     img.paste(pedestal, (0, 0), pedestal)
 
     add_particles(img, 88, seed=1907, clear_center=(cx, cy), clear_radius=s(360))

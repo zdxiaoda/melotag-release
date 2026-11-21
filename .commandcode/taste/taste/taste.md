@@ -1,0 +1,8 @@
+# Taste
+- Promo/trailer videos must be visually stunning and impressive — layered motion design (glows, light sweeps, particles, camera pushes, transitions, visuals that pulse with the music) — not a plain assembly of static material shots. Confidence: 0.85
+- When a video uses a BGM track, use it directly from the beginning of the song (from 0s); don't cut a segment from an arbitrary mid-track point. Confidence: 0.7
+- Even with motion dressing (glows, Ken Burns), a video built from screenshot slides still reads as a "PPT presentation" — structure promos as a pain-point narrative (problem hook before any branding, payoff, single CTA) and draw the product flow with code-built mock UI components as the foreground; screenshots at most as blurred background plates. Confidence: 0.9
+- Use the font 得意黑 (Smiley Sans) for promotional visuals — it is free for commercial use and looks great; when picking display fonts, favor ones with clear commercial-use licensing. Confidence: 0.9
+- Art style for promo materials should go light (浅色路线) rather than dark, and the style must be carried consistently across all related assets (trailer, hero images, etc.), not just the piece being edited. Confidence: 0.85
+- For major reworks, research best practices online first and present a detailed revision plan before implementing (user explicitly requested this flow when unhappy with a first version). Confidence: 0.7
+- Do not create submission-helper documents or folders (submission checklists, IARC memos, certification notes, e.g. `store/submission`); the user deleted these and asked never to recreate such docs. Confidence: 0.95

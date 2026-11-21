@@ -1,16 +1,19 @@
 # Melotag 商店宣传片（Remotion）
 
-三语（zh-CN / ja-JP / en-US）Microsoft Store 宣传片完全由代码生成：渐变背景、标题卡、截图 Ken Burns 运镜、字幕条与结尾卡都是 React 组件，配乐由 `<Audio>` 挂载。无需 Windows、无需录屏。
+三语（zh-CN / ja-JP / en-US）Microsoft Store 宣传片完全由代码生成：五幕痛点叙事（乱 → 解 → 五个功能场景 → 收益 → CTA），前景全部是代码绘制的模拟 UI 组件（列表行、在线匹配、标签表单、歌词对齐、重命名对比、封面网格），截图仅作虚化背景板；浅色美术风格，营销文字用得意黑（Smiley Sans，随仓库捆绑，OFL-1.1），模拟 UI 文字用思源黑体/Noto Sans；配乐由 `<Audio>` 挂载，低频能量经 `@remotion/media-utils` 驱动辉光脉动。无需 Windows、无需录屏。
 
-## 时间轴结构
+## 时间轴结构（共 3000 帧 = 50.0s @60fps，1920×1080）
 
 ```
-[标题卡 4.0s]  LOGO + 应用名 + 分隔线 + 标语 + 特性条
-[特性节拍 x6]  商店截图 Ken Burns 运镜 + 底部字幕条（4.4-4.6s/节拍）
-[结尾卡 4.6s]  LOGO + 免费 · Windows 10/11 · x64/arm64 + GitHub
+[痛点 Hook 4.4s]   散乱破损文件卡 + 故障感大字"音乐库,一团乱?"
+[转折 Reveal 3.2s] 光带扫飞旧卡片,Logo 弹入 + 旋转光环 + 应用名
+[功能场景 x5 6.2s] 整库导入 / 在线源自动匹配 / 标签封面 / 歌词对齐 / 批量重命名
+                   （虚化截图背景板 + 代码绘制 MockRow/云匹配/表单/歌词行/改名对比）
+[收益 Payoff 5.6s] 封面网格逐个弹出 + 本地盾牌 + "全部本地完成"
+[CTA 5.8s]         Logo + 免费 · Windows 10/11 + GitHub
 ```
 
-总长约 35.4s（上限 60s），1920×1080 @30fps。三语共用一套组件，文案与运镜集中在 [`src/data/captions.ts`](src/data/captions.ts)（移植自旧 `Build-StoreTrailer.py` 的 `CAPTIONS`/`TITLE`/`END`）。
+转场：幕间用扫带 wipe 与径向闪光交替遮盖切换。所有动效以 30fps 逻辑帧书写（`useLogicalFrame`），60fps 输出下节奏不变。三语共用一套组件，文案与模拟 UI 文字集中在 [`src/data/captions.ts`](src/data/captions.ts)。
 
 ## 渲染
 
@@ -37,9 +40,10 @@ npm run validate                           # ffprobe 校验成片
 
 ## 资源
 
-- 截图：`../images/screenshots/<lang>/`（由 `../tools/Capture-StoreScreenshots.ps1` 采集，虚构演示内容）。
+- 截图：`../images/screenshots/<lang>/`（历史采集素材，虚构演示内容）。
 - LOGO：`../images/melotag-logo.png`。
-- BGM：`public/bgm.m4a`，剪辑自 ChiliChill《给你的BGM Vol.1》（本地 WAV → 46s 段落 → loudnorm -22 LUFS → AAC 192k）。剪辑与署名见 [`../audio/README.md`](../audio/README.md)；**公开使用需注明出处**，上传 Store 时在视频备注中注明。
+- 字体：Noto Sans SC/JP/Sans 经 `@remotion/google-fonts` 在线加载（OFL-1.1，不捆绑）；得意黑 Smiley Sans 捆绑在 `public/fonts/`（OFL-1.1，许可文本见 `public/fonts/OFL-1.1.txt`），仅用于营销/展示文字，模拟 UI 文字用思源黑体。
+- BGM：`public/bgm.m4a`，剪辑自 ChiliChill《给你的BGM Vol.1》（本地 WAV → **原曲 0s 起的 50s 段落** → 归一化 -22 LUFS → AAC 192k）。剪辑与署名见 [`../audio/README.md`](../audio/README.md)；**公开使用需注明出处**。
 
 ## 许可
 
