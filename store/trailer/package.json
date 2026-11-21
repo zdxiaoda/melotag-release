@@ -1,0 +1,27 @@
+{
+  "name": "melotag-store-trailer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Melotag Microsoft Store trailer, generated with Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:zh-CN": "remotion render src/index.ts trailer-zh-CN out/Melotag-trailer-zh-CN.mp4",
+    "render:ja-JP": "remotion render src/index.ts trailer-ja-JP out/Melotag-trailer-ja-JP.mp4",
+    "render:en-US": "remotion render src/index.ts trailer-en-US out/Melotag-trailer-en-US.mp4",
+    "still:zh-CN": "remotion still src/index.ts thumb-zh-CN ../trailer/zh-CN/thumbnail-1920x1080.png",
+    "still:ja-JP": "remotion still src/index.ts thumb-ja-JP ../trailer/ja-JP/thumbnail-1920x1080.png",
+    "still:en-US": "remotion still src/index.ts thumb-en-US ../trailer/en-US/thumbnail-1920x1080.png",
+    "validate": "../trailer/scripts/validate.sh out/*.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.250",
+    "@remotion/google-fonts": "^4.0.250",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.250"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "typescript": "^5.9.3"
+  }
+}
