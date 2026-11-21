@@ -1,0 +1,17 @@
+# Node / Remotion
+node_modules/
+store/trailer/out/
+
+# 原始音频只在本地保留（见 store/audio/README.md），入库的是压缩后的片段
+*.wav
+
+# 构建与工具输出
+__pycache__/
+*.log
+dist/
+stage/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

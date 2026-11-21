@@ -1,0 +1,9 @@
+* text=auto
+*.md text
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.mp3 binary
+*.m4a binary
+*.wav binary
