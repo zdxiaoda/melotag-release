@@ -148,7 +148,7 @@ store/
 
 | 用途 | 路径 | 尺寸 | 模式 | 当前大小 | 数量 | 必需性 | 上传位置 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 截图 | `images/screenshots/<lang>/*.png` | 1600×900 | RGBA（32 位 ARGB 缓冲区；画面不透明） | 26.6–181.7 KiB/张 | 每语言 4 张 | 必需；每语言至少 1 张，本套 4 张 | 对应语言 listing 的截图区 |
+| 截图 | `images/screenshots/<lang>/*.png` | 1600×900 | RGBA（32 位 ARGB 缓冲区；画面不透明） | 181–275 KiB/张 | 每语言 4 张 | 必需；每语言至少 1 张，本套 4 张 | 对应语言 listing 的截图区 |
 | 商店图标 | `images/logo/app-tile-300x300.png` | 300×300 | RGBA | 26.5 KiB | 1 张 | 必需；Store logo | Partner Center 的 Store logo |
 | Poster | `images/poster/<lang>/poster-720x1080.png` | 720×1080 | RGB | 277.2–286.8 KiB | 3 张 | PC 可选；三语各一张 | 对应语言 listing 的 poster art |
 | Box art | `images/logo/box-art-1080x1080.png` | 1080×1080 | RGB | 276.1 KiB | 1 张 | PC 可选；通用 | 任一/全部语言的 box art |
@@ -182,9 +182,7 @@ uv run --offline --with pillow python store/tools/Generate-StoreArt.py
 
 ### 5.2 商店截图
 
-`images/screenshots/<lang>/` 的 12 张截图（1600×900）为已采集的历史素材：由 Melotag 应用在隔离数据目录（独立的虚构演示曲库与 settings.json）中运行后截取，内容全部为虚构演示数据，不含真实音乐库。采集脚本已随主仓库依赖一并移除，本仓库不再包含截图复现工具；截图过期时需使用应用的新版本重新采集后覆盖同名文件。
-
-> 注意：现有截图采集于 1.4.1。1.7.0 已加入行右键菜单、可自定义列与排序、重做的在线匹配页和对话框样式，正式提交前应使用 1.7.0 重新采集，避免截图与当前界面不一致。宣传片前景为代码绘制的模拟 UI，不直接引用这些截图。
+`images/screenshots/<lang>/` 的 12 张截图（1600×900）已按 1.7.0 重新采集：在 Linux 桌面以 1600×900 逻辑尺寸、深色主题运行应用，使用隔离数据目录与独立的虚构演示曲库（22 首、4 张专辑封面、一首内嵌歌词）后截取，内容全部为虚构演示数据，不含真实音乐库。采集脚本不在本仓库；界面再次变化时需用对应版本重新采集并覆盖同名文件。宣传片前景为代码绘制的模拟 UI，不直接引用这些截图。
 
 ### 5.3 渲染宣传片（Remotion）
 
