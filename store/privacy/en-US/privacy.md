@@ -1,6 +1,6 @@
 # Melotag Privacy Policy
 
-Effective date: 2026-11-03
+Effective date: 2026-11-22
 
 This policy explains how Melotag handles information in its Windows desktop edition. Melotag is a local music tag editor. It does not require an account and does not include advertising, analytics, or telemetry.
 
@@ -22,7 +22,7 @@ By default, these files stay on your device. Do not share `settings.json` or `hi
 
 ## Online lookups
 
-Melotag connects to the network for online tag matching, cover search, and lyric search when you use those features. Online lookups send search text (usually title, artist, and album) to the third-party services you select. These may include Chinese music services (NetEase Cloud Music, QQ Music, Kugou, Kuwo) and international services (MusicBrainz, Cover Art Archive, iTunes Search API, Last.fm, LRCLIB). Requests go directly to those services' domains and are subject to their privacy policies and availability. Melotag does not control their responses and cannot guarantee that results are comprehensive or always available.
+Melotag connects to the network for online tag matching, cover search, lyric search, and audio fingerprint identification when you use those features. Online lookups send search text (usually title, artist, and album) to the third-party services you select. These may include Chinese music services (NetEase Cloud Music, QQ Music, Kugou, Kuwo) and international services (MusicBrainz, AcoustID, Cover Art Archive, iTunes Search API, Last.fm, LRCLIB). With AcoustID audio fingerprinting, the app computes the fingerprint locally (using only the first 120 seconds; the audio file itself is not uploaded) and sends only the fingerprint string, track duration, and the built-in application API key to api.acoustid.org; covers for AcoustID matches are fetched from Cover Art Archive. Requests go directly to those services' domains and are subject to their privacy policies and availability. Melotag does not control their responses and cannot guarantee that results are comprehensive or always available.
 
 At startup, Melotag checks GitHub Releases for the latest version by default. That request includes standard network metadata such as your IP address and User-Agent. You can disable the startup check in Settings and run it manually from the Help menu.
 

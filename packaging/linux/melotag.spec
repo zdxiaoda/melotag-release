@@ -14,12 +14,17 @@ BuildArch:      x86_64
 Requires:       glibc fontconfig freetype libICE libSM libX11 libxcb libxkbcommon
 Requires:       libXrandr libXi libXcursor libXinerama mesa-libEGL mesa-libGL glib2
 Recommends:     dotnet-runtime-10.0
+# AcoustID 音频指纹通过系统 GStreamer 解码，缺插件时仅指纹识别不可用。
+Recommends:     gstreamer1
+Recommends:     gstreamer1-plugins-base
+Recommends:     gstreamer1-plugins-good
 Recommends:     gstreamer1-libav
 
 %description
 音签 Melotag - 跨平台音乐标签编辑器。
 支持 MP3 / FLAC / APE / OGG / MP4 等容器的标签、封面与歌词读写，
 可从多个在线源匹配元数据，并带有重命名、历史撤销与简繁转换。
+可用 AcoustID 音频指纹识别无标签或文件名错乱的文件。
 需要 .NET 10 运行时（本包不包含）。
 
 %prep

@@ -1,7 +1,7 @@
 # 构建 Microsoft Store 用的 MSIX（单个架构）。
 # 用法：
 #   ./packaging/windows/msix/build-msix.ps1 `
-#     -Version 1.2.1.0 `
+#     -Version 1.7.0.0 `
 #     -Architecture x64 `
 #     -IdentityName "Partner Center 的 Package/Identity/Name" `
 #     -Publisher "Partner Center 的 Package/Identity/Publisher" `

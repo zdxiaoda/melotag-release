@@ -12,11 +12,18 @@ finish-args:
   - --filesystem=home
   - --filesystem=/run/media
   - --filesystem=/media
+# AcoustID 指纹识别依赖 GStreamer 解码；ffmpeg-full 提供 MP3/AAC/FLAC 等编解码器。
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    version: '24.08'
+    add-ld-path: .
+    no-autodownload: false
 modules:
   - name: melotag
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/bin
+      - mkdir -p /app/bin /app/lib/ffmpeg
       - cp -a app/. /app/bin/
       - install -Dm644 io.melotag.app.desktop /app/share/applications/io.melotag.app.desktop
       - install -Dm644 io.melotag.app.png /app/share/icons/hicolor/512x512/apps/io.melotag.app.png

@@ -4,21 +4,21 @@
 
 ## 定位与优势
 
-音签 Melotag 是跨 Windows、Linux 与 Android 的本地音乐标签编辑器。三端共用 .NET 10、C# 与 Avalonia 12 的标签核心和界面代码，文件列表、编辑流程与设置项保持一致。应用不使用 Electron 或 Chromium 外壳，界面与逻辑运行在同一个 .NET 进程中。标签通过 TagLib# 在本地直接读写，音频文件不会上传；匹配结果的应用、重命名和保存都在本机完成，在线匹配只在需要时查询元数据、封面或歌词。面向曲库整理提供批量自动匹配、批量保存、封面批量提取、模板/正则重命名与本地历史快照。Microsoft Store 提交物料覆盖 Windows x64 与 arm64（合并为一个 `.msixbundle`），Linux 与 Android 版本从项目 Release 获取；实际耗时取决于文件数量、磁盘与网络状况，本文不提供性能承诺。
+音签 Melotag 是跨 Windows、Linux 与 Android 的本地音乐标签编辑器。三端共用 .NET 10、C# 与 Avalonia 12 的标签核心和界面代码，文件列表、编辑流程与设置项保持一致。应用不使用 Electron 或 Chromium 外壳，界面与逻辑运行在同一个 .NET 进程中。标签通过 TagLib# 在本地直接读写，音频文件不会上传；匹配结果的应用、重命名和保存都在本机完成，在线匹配只在需要时查询元数据、封面或歌词。对于没有标签或文件名错乱的文件，可用 AcoustID 音频指纹按声音内容识别：指纹在本机计算，只发送指纹与时长，不上传音频。面向曲库整理提供右键批量操作、选中行批量自动匹配、可自定义列与排序、批量保存、封面批量提取、模板/正则重命名与本地历史快照。界面支持简体中文、繁體中文、日本語与 English。Microsoft Store 提交物料覆盖 Windows x64 与 arm64（合并为一个 `.msixbundle`），Linux 与 Android 版本从项目 Release 获取；实际耗时取决于文件数量、磁盘与网络状况，本文不提供性能承诺。
 
 | 项目 | 值 |
 | --- | --- |
-| 应用版本 | 1.4.1 |
-| MSIX 包版本 | 1.4.1.0 |
+| 应用版本 | 1.7.0 |
+| MSIX 包版本 | 1.7.0.0 |
 | 价格 | 免费（Free） |
 | 商店类别 | Music |
 | 平台 | Windows PC |
-| 系统要求 | Windows 10 版本 2004（内部版本 19041，即 10.0.19041）或更高；x64 或 arm64 处理器 |
+| 系统要求 | Windows 10 版本 2004（内部版本 19041，即 10.0.19041）或更高；x64 或 arm64 处理器；AcoustID 指纹识别需系统 Media Foundation，Windows N 版需安装媒体功能包 |
 | 支持 URL | https://github.com/zdxiaoda/Melotag/issues |
 | 网站 | https://github.com/zdxiaoda/Melotag |
-| 物料整理日期 | 2026-11-04 |
+| 物料整理日期 | 2026-11-22 |
 
-版本号来源：应用版本统一由 `Directory.Build.props` 的 `Version` 决定（本物料快照为 `1.4.1`）；桌面端程序集版本、Android `ApplicationDisplayVersion` 与默认 User-Agent 都从它自动派生。MSIX 的 `Identity/@Version` 必须是四段数字（本快照为 `1.4.1.0`），由 `packaging/windows/msix/build-msix.ps1` 注入。
+版本号来源：应用版本统一由 `Directory.Build.props` 的 `Version` 决定（本物料快照为 `1.7.0`）；桌面端程序集版本、Android `ApplicationDisplayVersion` 与默认 User-Agent 都从它自动派生。MSIX 的 `Identity/@Version` 必须是四段数字（本快照为 `1.7.0.0`），由 `packaging/windows/msix/build-msix.ps1` 注入。
 
 ## 1. 交付目录
 
@@ -86,7 +86,7 @@ store/
 | --- | --- | --- | --- | --- |
 | Product name / 产品名称 | `listing/zh-CN/listing.md` §产品名称 | `listing/ja-JP/listing.md` §製品名 | `listing/en-US/listing.md` §Product name | 中文为“音签 Melotag”，日文和英文为“Melotag”；须先在 Partner Center 确认或预留名称 |
 | Short title / 简短标题 | §简短标题 | §短いタイトル | §Short title | 与产品名称一致 |
-| Short description / 简短说明 | §简短说明 | §短い説明 | §Short description | 简中 102、日文 159、英文 269 字符，保持单段 |
+| Short description / 简短说明 | §简短说明 | §短い説明 | §Short description | 简中 119、日文 176、英文 258 字符，保持单段 |
 | Description / 详细说明 | §详细说明 | §詳細説明 | §Description | 必需字段；保留 DSF/DFF、多音轨和第三方在线结果的限制说明 |
 | Product features / 产品功能 | §产品功能（10 条） | §製品の機能（10 項目） | §Product features（10 items） | 每条单独一行 |
 | Search terms / 搜索关键词 | §搜索关键词（7 条） | §検索キーワード（7 件） | §Search keywords（7 items） | 以逗号分隔，不带编号 |
@@ -184,6 +184,8 @@ uv run --offline --with pillow python store/tools/Generate-StoreArt.py
 
 `images/screenshots/<lang>/` 的 12 张截图（1600×900）为已采集的历史素材：由 Melotag 应用在隔离数据目录（独立的虚构演示曲库与 settings.json）中运行后截取，内容全部为虚构演示数据，不含真实音乐库。采集脚本已随主仓库依赖一并移除，本仓库不再包含截图复现工具；截图过期时需使用应用的新版本重新采集后覆盖同名文件。
 
+> 注意：现有截图采集于 1.4.1。1.7.0 已加入行右键菜单、可自定义列与排序、重做的在线匹配页和对话框样式，正式提交前应使用 1.7.0 重新采集，避免截图与当前界面不一致。宣传片前景为代码绘制的模拟 UI，不直接引用这些截图。
+
 ### 5.3 渲染宣传片（Remotion）
 
 宣传片对应 Partner Center 的 Trailer 字段，不是上架必需项。三语版本由 `trailer/` 下的 Remotion 项目纯程序化生成：五幕痛点叙事，前景全部是代码绘制的模拟 UI 组件（浅色美术，营销文字得意黑、模拟 UI 思源黑体），截图仅作虚化背景板；配乐来自 ChiliChill《给你的BGM Vol.1》（使用需署名，见 [audio/README.md](audio/README.md)）。三语文案集中在 `trailer/src/data/captions.ts`，改文案只需改这一个文件并重新渲染，无需任何录制。
@@ -231,7 +233,7 @@ npx remotion still src/index.ts thumb-en-US en-US/thumbnail-1920x1080.png
 2. 填写 Properties：Free、Music、Windows 10 2004+ x64/arm64、支持 URL、网站、版权和开发者信息。
 3. 将 `store/privacy/` 推送到公开仓库（melotag-release）的 `main` 分支，验证三个隐私政策 URL 可公开访问后，再填入 Partner Center。
 4. 完成 IARC 问卷并取得评级结果；在证书签发前不要填写或宣称评级。
-5. 生成并上传 `.msixbundle`，确认包版本为 `1.4.1.0` 且包标识与 Partner Center 一致。
+5. 生成并上传 `.msixbundle`，确认包版本为 `1.7.0.0` 且包标识与 Partner Center 一致。
 6. 按 zh-CN、ja-JP、en-US 分别填写 listing，上传对应 4 张截图和 caption，以及 300×300 商店图标。
 7. 如需美化 PC 商店页面，再上传可选的 poster、box art 和 hero art。
 8. 如需宣传片，在该语言 listing 的 Trailer 区域上传对应 MP4 与 1920×1080 缩略图；Trailer 需单独通过认证。
@@ -261,7 +263,7 @@ npx remotion still src/index.ts thumb-en-US en-US/thumbnail-1920x1080.png
 
 ## 9. 发布前提醒
 
-- 应用版本为 `1.4.1`，MSIX 包版本为 `1.4.1.0`；最终以 `AppxManifest.xml` 的 `Identity/@Version` 为准。
+- 应用版本为 `1.7.0`，MSIX 包版本为 `1.7.0.0`；最终以 `AppxManifest.xml` 的 `Identity/@Version` 为准。
 - 商店价格为免费，类别为 Music；系统要求为 Windows 10 2004（10.0.19041）或更高、x64/arm64；商店包为包含两个架构的 `.msixbundle`。
 - 支持 URL 和网站分别为 `https://github.com/zdxiaoda/Melotag/issues` 与 `https://github.com/zdxiaoda/Melotag`。
 - 隐私政策 URL 只有在推送并验证后才有效；IARC 评级只有在证书签发后才可引用。
